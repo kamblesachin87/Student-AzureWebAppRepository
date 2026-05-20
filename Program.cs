@@ -1,7 +1,16 @@
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddApplicationInsightsTelemetry(new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions
+{
+    ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+});
+
+var connectionString = builder.Configuration.GetConnectionString("SqlConnectionString");
+builder.Services.AddDbContext<Student_WebApp.Data.AppDbContexts>(options =>
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
